@@ -62,6 +62,9 @@ internal sealed class ContainerFilter
 			pattern.Append(exclude.Replace(".", @"\.").Replace("*", ".*"));
 		}
 
+		if (pattern.Length == 0)
+			pattern.Append("^(?!.)$");
+
 		return new Regex(pattern.ToString(), RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 	}
 

@@ -11,7 +11,14 @@ internal sealed class TypeContainer
 
 	public void AddProjects(IEnumerable<string> projects)
 	{
-		_projects.AddRange(projects);
+		foreach (var project in projects)
+		{
+			_projects.Add(project);
+			
+			if (!_types.ContainsKey(project))
+				_types.Add(project, new List<string>());
+		}
+		
 	}
 
 	public void AddTypeReference(string typeName, string referencedTypeName)
@@ -21,7 +28,13 @@ internal sealed class TypeContainer
 
 	public void AddTypes(string project, IEnumerable<string> types)
 	{
-		_types.Add(project, types.ToList());
+		if (!_types.TryGetValue(project, out var typeList))
+		{
+			typeList = new List<string>();
+			_types.Add(project, typeList);
+		}
+		
+		typeList.AddRange(types);
 	}
 
 	public IReadOnlyCollection<string> Projects => _projects;
